@@ -95,7 +95,7 @@ def filter_ts_based_on_lifecycle(c, df, lifecycle):
     df : pandas dataframe
         Dataframe with Time Series.
     lifecycle : pandas dataframe
-        Lifecycle info.
+        Time Series lifecycle info.
 
     Returns
     -------
