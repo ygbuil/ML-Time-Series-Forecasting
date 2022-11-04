@@ -1,12 +1,11 @@
-# LIBRARIES
+# libraries
 import pandas as pd
 
-
-# LOCAL LIBRARIES
+# local libraries
 from objects.constants import Constants
 
 
-# CONSTANTS
+# constants definitions
 c = Constants(
     forecast_group_level=['product', 'store'],
     date_column='date',
@@ -36,7 +35,10 @@ c = Constants(
         'learning_rate': [0.3, 0.8],
         'n_estimators': [100, 500],
         'subsample': [0.6, 1]
-    }
+    },
+    parallel_forecast=True,
+    plot_results=True
 )
 
+# check for possible invalid constants
 c.run_checks()

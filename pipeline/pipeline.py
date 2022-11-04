@@ -21,7 +21,7 @@ def pipeline(c):
     df, lifecycle, inputs = modules.preprocessing(c=c, df=df)
 
     # forecasting
-    forecast = modules.forecasting(inputs=inputs)
+    forecast = modules.forecasting(c=c, inputs=inputs)
 
     # results
     metrics = modules.results(

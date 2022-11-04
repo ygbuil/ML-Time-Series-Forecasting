@@ -111,7 +111,7 @@ def compute_forecast_single_ts(c, df_train):
 
     elif df_train['lifecycle'].iloc[0] == 'less_1_period_history':
         df_train = df_train.drop('lifecycle', axis=1)
-        forecast = less_1y_forecast(c=c, df_train=df_train)
+        forecast = less_1_period_forecast(c=c, df_train=df_train)
 
     elif df_train['lifecycle'].iloc[0] == 'consolidated':
         df_train = df_train.drop('lifecycle', axis=1)
@@ -150,9 +150,9 @@ def obsolete_forecast(c, df_train):
     return forecast
 
 
-def less_1y_forecast(c, df_train):
+def less_1_period_forecast(c, df_train):
     '''
-    Calculates a Moving Average for Time Series with less than 1 year of
+    Calculates a Moving Average for Time Series with less than 1 period of
     history.
 
     Parameters

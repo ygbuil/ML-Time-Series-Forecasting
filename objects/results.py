@@ -6,7 +6,7 @@ from matplotlib.pyplot import figure
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 
-def get_metrics_and_plots(c, df, lifecycle, forecast, plot=False):
+def get_metrics_and_plots(c, df, lifecycle, forecast, plot_results):
     '''
     Calculates error metrics and plots the forecast.
 
@@ -18,7 +18,7 @@ def get_metrics_and_plots(c, df, lifecycle, forecast, plot=False):
         Dataframe with Time Series.
     forecast : pandas dataframe
         Forecast dataframe.
-    plot : boolean
+    plot_results : bool
         Indicates if we want plots to be ploted or not.
 
     Returns
@@ -89,12 +89,12 @@ def get_metrics_and_plots(c, df, lifecycle, forecast, plot=False):
                 ts_metrics['total_percentage_error'] = np.nan
 
             # plot results
-            if plot:
+            if plot_results:
                 plot_title = get_plot_title(
                     c=c, ts_id=list(ts_train[c.forecast_group_level].iloc[0]),
                     ts_metrics=ts_metrics
                 )
-                plot_results(
+                plot_ts(
                     c=c, ts_train=ts_train, ts_test=ts_test,
                     ts_forecast=ts_forecast, plot_title=plot_title
                 )
@@ -102,14 +102,14 @@ def get_metrics_and_plots(c, df, lifecycle, forecast, plot=False):
             metrics = pd.concat([metrics, ts_metrics], axis=0)
 
     else:
-        if plot:
+        if plot_results:
             for ts_train, ts_forecast in zip(
                 df_train_splited, forecast_splited
             ):
                 plot_title = get_plot_title(
                     c=c, ts_id=list(ts_train[c.forecast_group_level].iloc[0])
                 )
-                plot_results(
+                plot_ts(
                     c=c, ts_train=ts_train, ts_test=None,
                     ts_forecast=ts_forecast, plot_title=plot_title
                 )
@@ -153,7 +153,7 @@ def get_plot_title(c, ts_id, ts_metrics=None):
     return plot_title
 
 
-def plot_results(c, ts_train, ts_test, ts_forecast, plot_title):
+def plot_ts(c, ts_train, ts_test, ts_forecast, plot_title):
     '''
     Plots the historical, expected and forecsted values of the Time Series.
 

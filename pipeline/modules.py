@@ -79,12 +79,14 @@ def preprocessing(c, df):
     return df, lifecycle, inputs
 
 
-def forecasting(inputs):
+def forecasting(c, inputs):
     '''
     Generate forecast.
 
     Parameters
     ----------
+    c : instance of class
+        Instance of calss Constants that contains all constants.
     inputs : tupple
         Inputs that will be used for forecasting.
 
@@ -95,7 +97,9 @@ def forecasting(inputs):
 
     '''
 
-    forecast = fcst.compute_forecast(inputs=inputs, parallel_forecast=True)
+    forecast = fcst.compute_forecast(
+        inputs=inputs, parallel_forecast=c.parallel_forecast
+    )
 
     return forecast
 
@@ -123,7 +127,8 @@ def results(c, df, forecast, lifecycle):
     '''
 
     metrics = res.get_metrics_and_plots(
-        c=c, df=df, forecast=forecast, lifecycle=lifecycle, plot=True
+        c=c, df=df, forecast=forecast, lifecycle=lifecycle,
+        plot_results=c.plot_results
     )
 
     return metrics

@@ -10,7 +10,7 @@ class Constants:
         statistical_features, stats_to_calculate, number_of_periods,
         shift_of_periods, slope_features, slope_past_periods, time_features,
         time_features_encoding_type, use_cross_validation, cv_n_splits,
-        xgb_hyperparams
+        xgb_hyperparams, parallel_forecast, plot_results
     ):
         '''
         Declares all the constants that will be using during the entire code.
@@ -76,6 +76,12 @@ class Constants:
             Number of splits for TimeSeriesSplit cross validation.
         xgb_hyperparams : dictionary
             Declares hyperparmeters to try.
+        parallel_forecast : bool
+            True: Forecast each Time Series in parallel.
+            False: Forecast each Time Series sequentialy.
+        plot_results : bool
+            True: Plot forecasted Time Series.
+            False: Do not plot.
 
         Returns
         -------
@@ -112,8 +118,24 @@ class Constants:
         self.use_cross_validation = use_cross_validation
         self.cv_n_splits = cv_n_splits
         self.xgb_hyperparams = xgb_hyperparams
+        self.parallel_forecast = parallel_forecast
+        self.plot_results = plot_results
 
     def run_checks(self):
+        '''
+        Check for incorrect input constants
+
+        Raises
+        ------
+        Exception
+            Exception message indicating the error.
+
+        Returns
+        -------
+        None.
+
+        '''
+
         for stat in self.stats_to_calculate:
             if stat not in ['mean', 'sum', 'std']:
                 raise Exception(
