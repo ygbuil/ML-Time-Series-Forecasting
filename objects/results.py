@@ -52,8 +52,7 @@ def get_metrics_and_plots(c, df, lifecycle, forecast, plot_results):
     if c.use_test_set:
         # initialize metrics dataframe
         metrics = pd.DataFrame(
-            columns=c.forecast_group_level
-            + ['mae', 'rmse', 'total_percentage_error']
+            columns=c.forecast_group_level + ['mae', 'rmse']
         )
 
         for ts_train, ts_test, ts_forecast in zip(
@@ -77,16 +76,6 @@ def get_metrics_and_plots(c, df, lifecycle, forecast, plot_results):
                 )**0.5,
                 2
             )
-            try:
-                ts_metrics['total_percentage_error'] = (
-                    round(
-                        (sum(list_ts_forecast)/sum(list_ts_expected_output)
-                         - 1)*100,
-                        2
-                    )
-                )
-            except:
-                ts_metrics['total_percentage_error'] = np.nan
 
             # plot results
             if plot_results:
@@ -148,7 +137,7 @@ def get_plot_title(c, ts_id, ts_metrics=None):
     plot_title = plot_title[:-3]
 
     if ts_metrics is not None:
-        plot_title = f"""{plot_title} | RMSE: {ts_metrics['rmse'].iloc[0]} | total_percentage_error: {ts_metrics['total_percentage_error'].iloc[0]} %"""
+        plot_title = f"""{plot_title} | RMSE: {ts_metrics['rmse'].iloc[0]}"""
 
     return plot_title
 
