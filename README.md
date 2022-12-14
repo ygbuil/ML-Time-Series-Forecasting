@@ -23,4 +23,6 @@ This project is a Time Series Forecasting code that uses XGBoost to do multi-ste
 
 Disclaimer: Parameters in "constants/constants.py" are not optimized for the given dataset, they are set for demonstration purposes.
 
+Example of the resulting forecast:
+
 ![alt_file](https://github.com/ygbuil/ML-Time-Series-Forecasting/blob/master/forecast_result_example.png)
