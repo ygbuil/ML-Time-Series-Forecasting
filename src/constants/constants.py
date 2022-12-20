@@ -2,7 +2,7 @@
 import pandas as pd
 
 # local libraries
-from objects.constants import Constants
+from src.objects.constants import Constants
 
 
 # constants definitions

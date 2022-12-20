@@ -2,10 +2,10 @@
 import pandas as pd
 
 # local libraries
-import objects.general as gen
-import objects.features as ft
-import objects.forecasting as fcst
-import objects.results as res
+import src.objects.general as gen
+import src.objects.features as ft
+import src.objects.forecasting as fcst
+import src.objects.results as res
 
 
 def read_inputs(c, file_path):

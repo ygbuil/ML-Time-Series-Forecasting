@@ -9,7 +9,7 @@ from xgboost.sklearn import XGBRegressor
 from sklearn.model_selection import GridSearchCV, TimeSeriesSplit
 
 # local libraries
-import objects.features as ft
+import src.objects.features as ft
 
 
 def compute_forecast(inputs, parallel_forecast=True):

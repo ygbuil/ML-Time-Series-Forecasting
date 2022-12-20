@@ -9,8 +9,8 @@ if path not in sys.path:
     sys.path.append(path)
 
 # local libraries
-from pipeline import modules
-from constants.constants import c
+from src.pipeline import modules
+from src.constants.constants import c
 
 
 def pipeline(c):
