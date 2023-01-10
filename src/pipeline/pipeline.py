@@ -14,6 +14,23 @@ from src.constants.constants import c
 
 
 def pipeline(c):
+    '''
+    Main pipeline that runs the entire process and outputs the forecast.
+
+    Parameters
+    ----------
+    c : instance of class
+        Instance of calss Constants that contains all constants.
+
+    Returns
+    -------
+    forecast : pandas dataframe
+        Forecast.
+    metrics : pandas dataframe
+        Metrics dataframe contianing MAE and RMSE.
+
+    '''
+
     # read inputs
     df = modules.read_inputs(c=c, file_path='data/example_dataset.csv')
 
