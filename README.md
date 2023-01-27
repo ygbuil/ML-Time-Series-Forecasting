@@ -12,7 +12,7 @@ This project is a Time Series Forecasting code that uses XGBoost to do multi-ste
 
 ## Project components:
 * <b>data/example_dataset.csv</b>: An example dataset to try out the code. Contains 7 Time Series of historical demand of products in different stores.
-* <b>pipeline/pipeline.py</b>: Main pipeline. This is the file you will need to run.
+* <b>main/main.py</b>: Main pipeline. This is the file you will need to run.
 * <b>objects</b>: Contains all functions and classes used in the pipeline.
 * <b>constants/constants.py</b>: This is where you can tune different model parameters. Every parameter is explained inside "objects/constants.py".
 
@@ -25,4 +25,4 @@ Disclaimer: Parameters in "constants/constants.py" are not optimized for the giv
 
 Example of the resulting forecast:
 
-![alt_file](https://github.com/ygbuil/ML-Time-Series-Forecasting/blob/master/forecast_result_example.png)
+![alt_file](https://github.com/ygbuil/ML-Time-Series-Forecasting/blob/master/iamges/forecast_result_example.png)
