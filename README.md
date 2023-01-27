@@ -25,4 +25,4 @@ Disclaimer: Parameters in "constants/constants.py" are not optimized for the giv
 
 Example of the resulting forecast:
 
-![alt_file](https://github.com/ygbuil/ML-Time-Series-Forecasting/blob/master/iamges/forecast_result_example.png)
+![alt_file](https://github.com/ygbuil/ML-Time-Series-Forecasting/blob/master/images/forecast_result_example.png)
