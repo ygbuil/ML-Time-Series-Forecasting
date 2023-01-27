@@ -32,7 +32,7 @@ def main(c):
     '''
 
     # read inputs
-    df = m.read_inputs(c=c, file_path='data/example_dataset.csv')
+    df = m.read_inputs(c=c, file_path='data/products_sales.csv')
 
     # preprocessing
     df, lifecycle, inputs = m.preprocessing(c=c, df=df)
