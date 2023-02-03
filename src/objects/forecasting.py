@@ -7,6 +7,7 @@ import multiprocessing
 from tqdm import tqdm
 from xgboost.sklearn import XGBRegressor
 from sklearn.model_selection import GridSearchCV, TimeSeriesSplit
+from sklearn.metrics import mean_squared_error
 
 # local libraries
 import src.objects.features as ft
@@ -236,10 +237,10 @@ def xgb_forecast(c, df_train):
 
     # X_train, y_train split
     X_train, y_train = (
-        df_train.drop(
+        np.array(df_train.drop(
             c.forecast_group_level + [c.date_column, c.target_column], axis=1
-        ),
-        df_train[c.target_column]
+        )),
+        np.array(df_train[c.target_column])
     )
 
     if c.use_cross_validation:
@@ -250,13 +251,15 @@ def xgb_forecast(c, df_train):
             scoring='neg_root_mean_squared_error',
             verbose=10, cv=TimeSeriesSplit(n_splits=c.cv_n_splits)
         )
-
     else:
         # default XGBoost parameters
         model = XGBRegressor(objective='reg:squarederror', seed=20)
 
     # train
-    model.fit(np.array(X_train), np.array(y_train))
+    model.fit(X_train, y_train)
+
+    # train RMSE
+    train_rmse = mean_squared_error(y_train, model.predict(X_train))**0.5
 
     # predict
     forecast = xgb_iterative_prediction(c=c, df_train=df_train, model=model)
