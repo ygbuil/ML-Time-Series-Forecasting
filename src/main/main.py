@@ -3,7 +3,7 @@ import os
 import sys
 
 # root path
-path = 'C:\\Users\\llorenc.buil\\Documents\\ML-Time-Series-Forecasting\\'
+path = 'C:\\Users\\llorenc.buil\\github\\ML-Time-Series-Forecasting'
 os.chdir(path)
 if path not in sys.path:
     sys.path.append(path)
@@ -46,4 +46,5 @@ def main(c):
     return forecast, metrics
 
 
-forecast, metrics = main(c=c)
+if __name__ == '__main__':
+    forecast, metrics = main(c=c)

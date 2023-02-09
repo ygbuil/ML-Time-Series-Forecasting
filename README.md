@@ -21,8 +21,10 @@ This project is a Time Series Forecasting code that uses XGBoost to do multi-ste
 * <b>Step 2</b>: Inside "main/main.py", in line 6, define path = "/path/in/your/local/machine".
 * <b>Step 3</b>: Run "main/main.py".
 
-Disclaimer: Parameters in "constants/constants.py" are not optimized for the given dataset, they are set for demonstration purposes.
+_Disclaimer: Parameters in "constants/constants.py" are not optimized for the given dataset, they are set for demonstration purposes._
 
 Example of the resulting forecast:
 
-![alt_file](https://github.com/ygbuil/ML-Time-Series-Forecasting/blob/master/images/forecast_result_example.png)
+![alt_file](https://github.com/ygbuil/ML-Time-Series-Forecasting/blob/master/images/forecast_result_example_1.png)
+
+![alt_file](https://github.com/ygbuil/ML-Time-Series-Forecasting/blob/master/images/forecast_result_example_2.png)
