@@ -246,14 +246,15 @@ def xgb_forecast(c, df_train):
     if c.use_cross_validation:
         # declare estimatior, hyperparameters, cross validation method...
         model = GridSearchCV(
-            estimator=XGBRegressor(objective='reg:squarederror', seed=20),
+            estimator=XGBRegressor(objective='reg:squarederror', seed=0),
             param_grid=c.xgb_hyperparams,
             scoring='neg_root_mean_squared_error',
-            verbose=10, cv=TimeSeriesSplit(n_splits=c.cv_n_splits)
+            verbose=10,
+            cv=TimeSeriesSplit(n_splits=c.cv_n_splits)
         )
     else:
         # default XGBoost parameters
-        model = XGBRegressor(objective='reg:squarederror', seed=20)
+        model = XGBRegressor(objective='reg:squarederror', seed=0)
 
     # train
     model.fit(X_train, y_train)

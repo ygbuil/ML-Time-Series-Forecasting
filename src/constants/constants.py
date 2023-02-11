@@ -30,13 +30,13 @@ c = Constants(
     use_cross_validation=False,
     cv_n_splits=4,
     xgb_hyperparams={
-        'max_depth': [3, 6],
-        'colsample_bytree': [0.7, 1],
         'learning_rate': [0.01, 0.1],
-        'n_estimators': [10, 100],
-        'subsample': [0.6, 1],
-        'reg_alpha': [1e-5, 1e-2, 0.1, 1, 100],
-        'gamma': [0, 0.2, 0.4]
+        'gamma': [0, 0.25, 1],
+        'max_depth': [3, 6],
+        'min_child_weight': [1, 10.0],
+        'subsample': [0.5, 1],
+        'n_estimators': [30, 100],
+        'reg_alpha': [0.1, 50]
     },
     parallel_forecast=True,
     plot_results=True
