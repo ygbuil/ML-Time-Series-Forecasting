@@ -98,7 +98,7 @@ def forecasting(c, inputs):
     '''
 
     forecast = fcst.compute_forecast(
-        inputs=inputs, parallel_forecast=c.parallel_forecast
+        c=c, inputs=inputs, parallel_forecast=c.parallel_forecast
     )
 
     return forecast
@@ -122,11 +122,11 @@ def results(c, df, forecast, lifecycle):
     Returns
     -------
     metrics : pandas dataframe
-        MAE, RMSE and total_percentage_error for each Time Series.
+        RMSE for each Time Series.
 
     '''
 
-    metrics = res.get_metrics_and_plots(
+    metrics = res.get_rmse_test_and_plots(
         c=c, df=df, forecast=forecast, lifecycle=lifecycle,
         plot_results=c.plot_results
     )

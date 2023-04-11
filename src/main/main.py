@@ -26,8 +26,10 @@ def main(c):
     -------
     forecast : pandas dataframe
         Forecast.
-    metrics : pandas dataframe
-        Metrics dataframe contianing MAE and RMSE.
+    rmse_validation : pandas dataframe
+        RMSE for the validation set.
+    rmse_test : pandas dataframe
+        RMSE for the test set.
 
     '''
 
@@ -38,13 +40,13 @@ def main(c):
     df, lifecycle, inputs = m.preprocessing(c=c, df=df)
 
     # forecasting
-    forecast = m.forecasting(c=c, inputs=inputs)
+    forecast, rmse_validation = m.forecasting(c=c, inputs=inputs)
 
     # results
-    metrics = m.results(c=c, df=df, forecast=forecast, lifecycle=lifecycle)
+    rmse_test = m.results(c=c, df=df, forecast=forecast, lifecycle=lifecycle)
 
-    return forecast, metrics
+    return forecast, rmse_validation, rmse_test
 
 
 if __name__ == '__main__':
-    forecast, metrics = main(c=c)
+    forecast, rmse_validation, rmse_test = main(c=c)

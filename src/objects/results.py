@@ -1,14 +1,13 @@
 # libraries
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.metrics import mean_squared_error
 
 
-def get_metrics_and_plots(c, df, lifecycle, forecast, plot_results):
+def get_rmse_test_and_plots(c, df, lifecycle, forecast, plot_results):
     '''
-    Calculates error metrics and plots the forecast.
+    Calculates RMSE for the test set and plots the forecast.
 
     Parameters
     ----------
@@ -23,8 +22,8 @@ def get_metrics_and_plots(c, df, lifecycle, forecast, plot_results):
 
     Returns
     -------
-    metrics : pandas dataframe
-        MAE, RMSE and total_percentage_error for each Time Series.
+    rmse_test : pandas dataframe
+        RMSE for each Time Series.
 
     '''
 
@@ -50,47 +49,40 @@ def get_metrics_and_plots(c, df, lifecycle, forecast, plot_results):
     forecast_splited = [d for _, d in forecast.groupby(c.forecast_group_level)]
 
     if c.use_test_set:
-        # initialize metrics dataframe
-        metrics = pd.DataFrame(
-            columns=c.forecast_group_level + ['mae', 'rmse']
-        )
+        # initialize rmse_test dataframe
+        rmse_test = pd.DataFrame(columns=c.forecast_group_level + ['rmse'])
 
         for ts_train, ts_test, ts_forecast in zip(
             df_train_splited, df_test_splited, forecast_splited
         ):
-
-            ts_metrics = ts_train[c.forecast_group_level].head(1)
-
-            # get expected_output and forecast in list format
-            list_ts_expected_output = list(ts_test[c.target_column])
-            list_ts_forecast = list(ts_forecast['forecast'])
-
-            # calculate metrics
-            ts_metrics['mae'] = round(
-                mean_absolute_error(list_ts_expected_output, list_ts_forecast),
-                2
-            )
-            ts_metrics['rmse'] = round(
+            # calculate RMSE
+            rmse_ts = ts_train[c.forecast_group_level].head(1)
+            rmse_ts['rmse'] = round(
                 mean_squared_error(
-                    list_ts_expected_output, list_ts_forecast
+                    list(ts_test[c.target_column]),
+                    list(ts_forecast['forecast'])
                 )**0.5,
                 2
             )
+            rmse_test = pd.concat([rmse_test, rmse_ts], axis=0)
 
             # plot results
             if plot_results:
                 plot_title = get_plot_title(
                     c=c, ts_id=list(ts_train[c.forecast_group_level].iloc[0]),
-                    ts_metrics=ts_metrics
+                    rmse_ts=rmse_ts
                 )
                 plot_ts(
                     c=c, ts_train=ts_train, ts_test=ts_test,
                     ts_forecast=ts_forecast, plot_title=plot_title
                 )
 
-            metrics = pd.concat([metrics, ts_metrics], axis=0)
 
     else:
+        # calculate RMSE
+        rmse_test = None
+
+        # plot results
         if plot_results:
             for ts_train, ts_forecast in zip(
                 df_train_splited, forecast_splited
@@ -103,12 +95,10 @@ def get_metrics_and_plots(c, df, lifecycle, forecast, plot_results):
                     ts_forecast=ts_forecast, plot_title=plot_title
                 )
 
-        metrics = None
-
-    return metrics
+    return rmse_test
 
 
-def get_plot_title(c, ts_id, ts_metrics=None):
+def get_plot_title(c, ts_id, rmse_ts=None):
     '''
     Creats the title of the plot based on the ts_id that is beeing ploted.
 
@@ -118,7 +108,7 @@ def get_plot_title(c, ts_id, ts_metrics=None):
         Instance of calss Constants that contains all constants.
     ts_id : list
         List containing each parameter that identifies the ts_id.
-    ts_metrics: pandas dataframe
+    rmse_ts: pandas dataframe
         Metrics of the Time Series.
 
     Returns
@@ -136,8 +126,8 @@ def get_plot_title(c, ts_id, ts_metrics=None):
 
     plot_title = plot_title[:-3]
 
-    if ts_metrics is not None:
-        plot_title = f"""{plot_title} | RMSE: {ts_metrics['rmse'].iloc[0]}"""
+    if rmse_ts is not None:
+        plot_title = f"""{plot_title} | RMSE: {rmse_ts['rmse'].iloc[0]}"""
 
     return plot_title
 

@@ -13,13 +13,15 @@ from sklearn.metrics import mean_squared_error
 import src.objects.features as ft
 
 
-def compute_forecast(inputs, parallel_forecast=True):
+def compute_forecast(c, inputs, parallel_forecast=True):
     '''
     Iterates over every Time Series in parallel (or sequentially), training a
     model and making a prediction for each Time Series.
 
     Parameters
     ----------
+    c : instance of class
+        Instance of calss Constants that contains all constants.
     inputs : list of tupples
         List of tupples where each tupple contains the inputs necessary for
         compute_forecast_single_ts().
@@ -31,12 +33,15 @@ def compute_forecast(inputs, parallel_forecast=True):
     -------
     forecast : pandas dataframe
         Dataframe with entire forecast for every Time Series.
+    rmse_validation: pandas dataframe
+        Dataframe with the RMSE of the validation set for every Time Series.
 
     '''
 
     start = time.time()
-    print('Start of forecast')
+    print('Start of forecast...')
 
+    # parallel forecast
     if parallel_forecast:
         n_processes = calc_n_processes()
         chunksize = calc_chunksize(
@@ -44,7 +49,7 @@ def compute_forecast(inputs, parallel_forecast=True):
         )
 
         with multiprocessing.Pool(processes=n_processes) as pool:
-            forecasts = list(
+            forecast_results = list(
                 tqdm(
                     pool.imap_unordered(
                         func=unpack_forecast_inputs, iterable=inputs,
@@ -54,17 +59,32 @@ def compute_forecast(inputs, parallel_forecast=True):
                 )
             )
 
+    # sequential forecast
     else:
-        forecasts = []
-        for ts in inputs:
-            forecasts.append(unpack_forecast_inputs(ts))
+        forecast_results = [unpack_forecast_inputs(ts) for ts in inputs]
 
-    forecast = pd.concat(forecasts).reset_index(drop=True)
+    # format results
+    forecasts = [result['forecast'] for result in forecast_results]
+    forecast = (
+        pd.concat(forecasts).sort_values(c.forecast_group_level)
+        .reset_index(drop=True)
+    )
 
-    print('End of forecast')
+    if c.use_cross_validation:
+        rmse_validations = [
+            result['rmse_validation'] for result in forecast_results
+        ]
+        rmse_validation = (
+            pd.concat(rmse_validations).sort_values(c.forecast_group_level)
+            .reset_index(drop=True)
+        )
+    else:
+        rmse_validation = None
+
+    print('End of forecast!')
     print('Forecast duration:', round(time.time() - start, 2), 'sec')
 
-    return forecast
+    return forecast, rmse_validation
 
 
 def unpack_forecast_inputs(inputs):
@@ -100,24 +120,26 @@ def compute_forecast_single_ts(c, df_train):
 
     Returns
     -------
-    forecast : pandas dataframe
-        Forecast calculated.
+    forecast_results : dict
+        Dictionary containing the forecast and the RMSE of the validation set.
 
     '''
 
     if df_train['lifecycle'].iloc[0] == 'obsolete':
         df_train = df_train.drop('lifecycle', axis=1)
         forecast = obsolete_forecast(c=c, df_train=df_train)
+        forecast_results = {'forecast': forecast, 'rmse_validation': None}
 
     elif df_train['lifecycle'].iloc[0] == 'less_1_period_history':
         df_train = df_train.drop('lifecycle', axis=1)
         forecast = less_1_period_forecast(c=c, df_train=df_train)
+        forecast_results = {'forecast': forecast, 'rmse_validation': None}
 
     elif df_train['lifecycle'].iloc[0] == 'consolidated':
         df_train = df_train.drop('lifecycle', axis=1)
-        forecast = xgb_forecast(c=c, df_train=df_train)
+        forecast_results = xgb_forecast(c=c, df_train=df_train)
 
-    return forecast
+    return forecast_results
 
 
 def obsolete_forecast(c, df_train):
@@ -230,8 +252,8 @@ def xgb_forecast(c, df_train):
 
     Returns
     -------
-    forecast : pandas dataframe
-        Dataframe containing the prediction.
+    forecast_results : dict
+        Dictionary containing the forecast and the RMSE of the validation set.
 
     '''
 
@@ -252,20 +274,37 @@ def xgb_forecast(c, df_train):
             verbose=10,
             cv=TimeSeriesSplit(n_splits=c.cv_n_splits)
         )
+
+        # train
+        model.fit(X_train, y_train)
+
+        # get validation RMSE for the winning set of hyperparametrs, i.e. for
+        # the final model (best model)
+        rmse_validation_value = round(-model.best_score_, 2)
+        rmse_validation = (
+            df_train[c.forecast_group_level].head(1).reset_index(drop=True)
+        )
+        rmse_validation['rmse'] = rmse_validation_value
+
     else:
         # default XGBoost parameters
         model = XGBRegressor(objective='reg:squarederror', seed=0)
 
-    # train
-    model.fit(X_train, y_train)
+        # train
+        model.fit(X_train, y_train)
 
-    # train RMSE
-    train_rmse = mean_squared_error(y_train, model.predict(X_train))**0.5
+        # rmse_validation set to None since no cross validation was applied
+        rmse_validation = None
 
     # predict
     forecast = xgb_iterative_prediction(c=c, df_train=df_train, model=model)
 
-    return forecast
+    # final results
+    forecast_results = {
+        'forecast': forecast, 'rmse_validation': rmse_validation
+    }
+
+    return forecast_results
 
 
 def xgb_iterative_prediction(c, df_train, model):
