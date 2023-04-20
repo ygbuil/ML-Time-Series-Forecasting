@@ -8,17 +8,17 @@ This project is a Time Series Forecasting code that uses XGBoost to do multi-ste
 * Multi-step forecasting.
 * Supports multivariate forecasting (external features).
 * Multiple Time Series can be forecasted in parallel.
-* Modular and easy to customize. Switch on and off different code features from the `constants/constants.py` file.
+* Modular and easy to customize. Switch on and off different code features from the `src/constants/constants.py` file.
 
 ## Project components:
-* `main.py`: Main pipeline. This is the file you will need to run.
-* `constants/constants.py`: This is where you can tune different model parameters. Every parameter is documented in `objects/constants.py`.
-* `objects`: Contains all functions and classes used in the pipeline.
-* `data/products_sales.csv`: An example dataset to try out the code. Contains 6 Time Series of historical demand of products in different stores.
+* `src/main.py`: Main pipeline. This is the file you will need to run.
+* `src/constants/constants.py`: This is where you can tune different model parameters. Every parameter is documented in `src/objects/constants.py`.
+* `src/objects`: Contains all functions and classes used in the pipeline.
+* `src/data/products_sales.csv`: An example dataset to try out the code. Contains 6 Time Series of historical demand of products in different stores.
 
 ## How to use it:
-* <b>Step 1</b>: In `constants/constants.py`, set the `root_path` variable to the apropiate root path in your machine. The root path is considered to be the `src` folder.
-* <b>Step 2</b>: Run `main.py`.
+* <b>Step 1</b>: In `src/constants/constants.py`, set the `root_path` variable to the apropiate root path in your machine. The root path is considered to be the `src` folder.
+* <b>Step 2</b>: Run `src/main.py`.
 
 _Disclaimer: Parameters in "constants/constants.py" are not optimized for the given dataset, they are set for demonstration purposes._
 
