@@ -10,7 +10,7 @@ from sklearn.model_selection import GridSearchCV, TimeSeriesSplit
 from sklearn.metrics import mean_squared_error
 
 # local libraries
-import src.objects.features as ft
+import objects.features as ft
 
 
 def compute_forecast(c, inputs, parallel_forecast=True):

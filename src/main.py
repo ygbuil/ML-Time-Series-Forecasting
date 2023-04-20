@@ -1,16 +1,6 @@
-# libraries
-import os
-import sys
-
-# root path
-path = 'C:\\Users\\llorenc.buil\\github\\ML-Time-Series-Forecasting'
-os.chdir(path)
-if path not in sys.path:
-    sys.path.append(path)
-
 # local libraries
-from src.constants.constants import c
-from src.objects import main_modules as m
+from constants.constants import c
+from objects import main_modules as m
 
 
 def main(c):
@@ -32,6 +22,9 @@ def main(c):
         RMSE for the test set.
 
     '''
+
+    # define sys path as root path
+    m.define_sys_path(c=c)
 
     # read inputs
     df = m.read_inputs(c=c, file_path='data/products_sales.csv')

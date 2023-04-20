@@ -1,11 +1,31 @@
 # libraries
+import sys
 import pandas as pd
 
 # local libraries
-import src.objects.general as gen
-import src.objects.features as ft
-import src.objects.forecasting as fcst
-import src.objects.results as res
+import objects.general as gen
+import objects.features as ft
+import objects.forecasting as fcst
+import objects.results as res
+
+
+def define_sys_path(c):
+    '''
+    Set sys path to the root path. This is very important for multiprocessing
+    library to work properly when parallelising the forecast.
+
+    Parameters
+    ----------
+    c : instance of class
+        Instance of calss Constants that contains all constants.
+
+    Returns
+    -------
+    None.
+
+    '''
+
+    sys.path.append(c.root_path) if c.root_path not in sys.path else None
 
 
 def read_inputs(c, file_path):

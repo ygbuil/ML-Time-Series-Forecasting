@@ -10,6 +10,9 @@ class Constants:
 
     Parameters
     ----------
+    root_path : str
+        Root path of the project. The root path is the 'src' folder.
+        E.g.: 'C:\\Users\\...\\ML-Time-Series-Forecasting\\src'
     forecast_group_level : list of strings
         Level at which the forecast will be calculated.
     date_column : string
@@ -82,6 +85,7 @@ class Constants:
 
     '''
 
+    root_path: str
     forecast_group_level: list
     date_column: str
     target_column: str

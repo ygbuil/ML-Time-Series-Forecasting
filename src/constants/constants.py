@@ -2,11 +2,14 @@
 import pandas as pd
 
 # local libraries
-from src.objects.constants import Constants
+from objects.constants import Constants
 
 
 # constants definitions
 c = Constants(
+    root_path = (
+        'C:\\Users\\llorenc.buil\\github\\ML-Time-Series-Forecasting\\src'
+    ),
     forecast_group_level=['product', 'store'],
     date_column='date',
     target_column='sales',
