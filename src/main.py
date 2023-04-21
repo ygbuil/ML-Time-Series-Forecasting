@@ -1,6 +1,6 @@
 # local libraries
+import objects.main_modules as m
 from constants.constants import c
-from objects import main_modules as m
 
 
 def main(c):
