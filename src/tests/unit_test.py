@@ -9,7 +9,7 @@ import objects.forecasting as fcst
 from constants.constants import c
 
 
-def test_add_missing_dates(df):
+def test_add_missing_dates(df, n_skus):
     '''
     Tests add_missing_dates() by removing a random date to the input dataframe
     and then filling the empty date.
@@ -18,15 +18,14 @@ def test_add_missing_dates(df):
     ----------
     df : pandas dataframe
         Input dataframe.
+    n_skus : int
+        Number of unique skus used for testing.
 
     Returns
     -------
     None.
 
     '''
-
-    # get unique skus
-    unique_skus = len(df[c.forecast_group_level].drop_duplicates())
 
     # get complete dates
     history_dates = pd.date_range(
@@ -45,7 +44,29 @@ def test_add_missing_dates(df):
         end_date=c.end_predict_date if c.use_test_set else c.end_history_date
     )
 
-    assert len(df) == len(history_dates)*unique_skus
+    assert len(df) == len(history_dates)*n_skus
+
+
+def test_get_lifecycle(df):
+    '''
+    Test get_lifecycle(). Checks that every sku has a lifecycle assigned.
+
+    Parameters
+    ----------
+    df : pandas dataframe
+        Input dataframe.
+
+    Returns
+    -------
+    None.
+
+    '''
+
+    df_train = df[df[c.date_column] <= c.end_history_date]
+
+    lifecycle = gen.get_lifecycle(c=c, df=df_train)
+
+    assert not all(lifecycle['lifecycle'].isnull())
 
 
 def test_xgb_forecast(df_train):

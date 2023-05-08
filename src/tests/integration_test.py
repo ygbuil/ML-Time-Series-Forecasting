@@ -36,16 +36,17 @@ def test_preprocessing(df):
     )
 
 
-def test_preprocessing_and_forecast(df):
+def test_forecast_and_results(df, n_skus):
     '''
-    Tests that the preprocessing and forecasting module interact properly
-    between each other, making sure the final output is consistent with the
-    input dimentions.
+    Tests that forecast and results making sure the final output is consistent
+    with the input.
 
     Parameters
     ----------
     df : pandas dataframe
         Input dataframe.
+    n_skus : int
+        Number of unique skus used for testing.
 
     Returns
     -------
@@ -59,6 +60,16 @@ def test_preprocessing_and_forecast(df):
     # forecasting
     forecast, rmse_validation = m.forecasting(c=c, inputs=inputs)
 
-    dates = pd.date_range(start=c.start_predict_date, end=c.end_predict_date)
+    # get predict dates
+    predict_dates = pd.date_range(
+        start=c.start_predict_date, end=c.end_predict_date
+    )
 
-    assert len(forecast) == len(list(dates)*3)
+    # results
+    c.plot_results = False
+    rmse_test = m.results(c=c, df=df, forecast=forecast, lifecycle=lifecycle)
+
+    assert (
+        len(forecast) == len(list(predict_dates)*n_skus) and
+        len(rmse_test) == n_skus
+    )
