@@ -1,27 +1,69 @@
 # libraries
 import pytest
 import pandas as pd
-import numpy as np
 from random import randrange
 
 # local libraries
-import objects.main_modules as m
 from constants.constants import c
 
 
 @pytest.fixture
-def test_df():
-    df = m.read_inputs(c=c, file_path='data/products_sales.csv')
-    test_df = df[c.forecast_group_level].drop_duplicates().head(3)
-    test_df = pd.merge(
-        left=test_df, right=df, on=c.forecast_group_level, how='left'
-    )
+def df():
+    '''
+    Create original input dataframe with 3 skus / time series.
 
-    return test_df
+    Returns
+    -------
+    df : pandas dataframe
+        Input dataframe.
+
+    '''
+
+    # define number of skus of the df
+    n_skus = 3
+
+    # create dates
+    if c.use_test_set:
+        dates = pd.date_range(
+            start=c.start_history_date, end=c.end_predict_date
+        )
+    else:
+        dates = pd.date_range(
+            start=c.start_history_date, end=c.end_history_date
+        )
+
+    # create names for the forecast_group_level categories
+    forecast_group_level_labels = []
+    for col in c.forecast_group_level:
+        temp = []
+        for i in range(n_skus):
+            temp += [f'{col}_test_{i}']*len(dates)
+        forecast_group_level_labels.append(temp)
+
+    # generate random time series values
+    ts = [randrange(100) for x in range(len(dates)*n_skus)]
+
+    df = pd.DataFrame(data=dict(zip(
+        c.forecast_group_level + [c.date_column, c.target_column],
+        [*forecast_group_level_labels, list(dates)*n_skus, ts])
+    ))
+
+    return df
 
 
 @pytest.fixture
 def df_train():
+    '''
+    Create train dataframe for 1 sku, ready to be used for prediction (except
+    for the attributes, which are missing)
+
+    Returns
+    -------
+    df_train : pandas dataframe
+        Dataframe for 1 sku.
+
+    '''
+
     history_dates = pd.date_range(
         start=c.start_history_date, end=c.end_history_date
     )
