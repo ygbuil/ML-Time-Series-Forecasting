@@ -125,7 +125,7 @@ def forecasting(c, inputs):
 
 def results(c, df, forecast, lifecycle):
     '''
-    Calculates error metrics and plots the forecast.
+    Calculates RMSE for the test set and plots the forecast.
 
     Parameters
     ----------
@@ -140,14 +140,14 @@ def results(c, df, forecast, lifecycle):
 
     Returns
     -------
-    metrics : pandas dataframe
+    rmse_test : pandas dataframe
         RMSE for each Time Series.
 
     '''
 
-    metrics = res.get_rmse_test_and_plots(
+    rmse_test = res.get_rmse_test_and_plots(
         c=c, df=df, forecast=forecast, lifecycle=lifecycle,
         plot_results=c.plot_results
     )
 
-    return metrics
+    return rmse_test

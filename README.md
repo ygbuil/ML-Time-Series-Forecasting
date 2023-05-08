@@ -15,6 +15,7 @@ This project is a Time Series Forecasting code that uses XGBoost to do multi-ste
 * `src/constants/constants.py`: This is where you can tune different model parameters. Every parameter is documented in `src/objects/constants.py`.
 * `src/objects`: Contains all functions and classes used in the pipeline.
 * `src/data/products_sales.csv`: An example dataset to try out the code. Contains 6 Time Series of historical demand of products in different stores.
+* `src/tests`: Unit and integration tests. They can be run using the `pytest` console command.
 
 ## How to use it:
 * <b>Step 1</b>: In `src/constants/constants.py`, set the `root_path` variable to the apropiate root path in your machine. The root path is considered to be the `src` folder.
