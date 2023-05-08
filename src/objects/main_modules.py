@@ -48,6 +48,9 @@ def read_inputs(c, file_path):
 
     df = pd.read_csv(file_path)
     df[c.date_column] = pd.to_datetime(df[c.date_column])
+    df = df.sort_values(
+        by=c.forecast_group_level + [c.date_column], ascending=True
+    )
 
     return df
 
@@ -74,10 +77,6 @@ def preprocessing(c, df):
         Inputs that will be used for forecasting.
 
     '''
-
-    df = df.sort_values(
-        by=c.forecast_group_level + [c.date_column], ascending=True
-    )
 
     df = gen.add_missing_dates(
         c=c, df=df, start_date=c.start_history_date,
